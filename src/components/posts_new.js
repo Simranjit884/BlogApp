@@ -13,7 +13,7 @@ class PostsNew extends Component{
                 <input 
                     className="form-control"
                     type="text"
-                    {...field.input}
+                    {...field.input} ////this means all the field.input object's event handlers will be passed as props to the <input>.
                 />
                 <div className="text-help">
                 {field.meta.touched?field.meta.error:'' }
