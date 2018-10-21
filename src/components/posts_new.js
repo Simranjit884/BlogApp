@@ -1,31 +1,30 @@
 import React,{Component} from 'react';
 import {Field,reduxForm} from 'redux-form';
 import {Link} from 'react-router-dom';
+import {createpost} from '../actions';
 import {connect} from 'react-redux';
-import {createPost} from '../actions';
 
 class PostsNew extends Component{
     renderField(field){
-        const className=`form-group ${field.meta.touched && field.meta.error?'has-danger':''}`;
-        return(
+        const className=`form-group ${field.meta.touched&&field.meta.error?'has-danger':''}`;
+        return (
             <div className={className}>
                 <label>{field.label}</label>
                 <input 
-                    className="form-control"
-                    type="text"
-                    {...field.input} ////this means all the field.input object's event handlers will be passed as props to the <input>.
-                />
+                className="form-control"
+                type="text"
+                {...field.input} /*this means all the field.input object's event handlers will be passed as props to the <input>.//ex- onChange={field.input.onChange}, onClick={field.input.onClick}*//>
                 <div className="text-help">
-                {field.meta.touched?field.meta.error:'' }
+                {field.meta.touched?field.meta.error:''}
                 </div>
-            </div>
-        )
+            </div>                                                  
+        );
     }
     onSubmit(values){
-        this.props.createPost(values);
+        this.props.createpost(values,()=>{this.props.history.push("/")});
     }
     render(){
-        const {handleSubmit}=this.props;
+        const {handleSubmit}=this.props;    //this.props.handleSubmit
         return (
             <form onSubmit={handleSubmit(this.onSubmit.bind(this))}>
                 <Field 
@@ -39,34 +38,32 @@ class PostsNew extends Component{
                     component={this.renderField}
                 />
                 <Field 
-                    label="Content"
+                    label="content"
                     name="content"
                     component={this.renderField}
                 />
-             <button className="btn btn-primary" type="submit">Submit</button>
-             <Link to="/" className="btn btn-danger">Cancel</Link>
+                <button type="submit" className="btn btn-primary">Submit</button>
+                <Link className="btn btn-danger" to="/">Cancel</Link>
             </form>
         );
     }
 }
-
 function validate(values){
     const errors={};
     if(!values.title){
-        errors.title="Enter a title!";
+        errors.title="Please enter the title";
     }
     if(!values.categories){
-        errors.categories="Enter some categories";
+        errors.categories="Please enter the categories";
     }
     if(!values.content){
-        errors.content="Enter some description please";
+        errors.content="Please enter the description";
     }
     return errors;
 }
-
 export default reduxForm({
-    validate:validate,
-    form:'PostsNewForm564'         //This has to be unique. its value can be anything
+    validate,
+    form:'firstform'            //This should be unique for each form inside an application.
 })(
-    connect(null,{createPost})(PostsNew)
-);                        
+    connect(null,{createpost})(PostsNew)
+    );
